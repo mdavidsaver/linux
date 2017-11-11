@@ -121,6 +121,7 @@ src-plat-$(CONFIG_44x) += treeboot-ebony.c cuboot-ebony.c treeboot-bamboo.c \
 				treeboot-iss4xx.c treeboot-currituck.c \
 				treeboot-akebono.c \
 				simpleboot.c fixed-head.S virtex.c
+src-plat-$(CONFIG_PPC_85xx) += simpleboot.c fixed-head.S
 src-plat-$(CONFIG_8xx) += cuboot-8xx.c fixed-head.S ep88xc.c redboot-8xx.c
 src-plat-$(CONFIG_PPC_MPC52xx) += cuboot-52xx.c
 src-plat-$(CONFIG_PPC_82xx) += cuboot-pq2.c fixed-head.S ep8248e.c cuboot-824x.c
