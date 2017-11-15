@@ -248,6 +248,11 @@ config MVME2500
 	help
 	  This option enables support for the Emerson/Artesyn MVME2500 board.
 
+config MVME3100
+	bool "Artesyn MVME3100"
+	help
+	  This option enables support for the Motorola/Emerson/Artesyn MVME3100 board.
+
 endif # PPC32
 
 config PPC_QEMU_E500
