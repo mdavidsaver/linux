@@ -137,7 +137,7 @@ relcd:
     mr r5, r7       /* dest */
 
 iline:
-    dcbst 0, r5
+    dcbf 0, r5
     sync
     icbi 0, r5
     isync
