@@ -12,13 +12,11 @@
 	.text
 	.globl _zimage_start
 _zimage_start:
-#ifdef CONFIG_E500
 	mfmsr   r10
 	rlwinm  r10,r10,0,~(1<<15)        /* Clear MSR_EE */
 	sync
 	mtmsr   r10
-	isync
-#endif
+    isync
 
     /* find where MOTLoad has left us */
     bl startx
@@ -26,11 +24,15 @@ startx:
     mflr r0                /* holds actual address of 'startx' */
     load_const r1, startx  /* desired location of 'startx' */
 
-    sub. r26, r0, r1     /* actual - desired, aka.  src - dest */
+    sub. r26, r0, r1     /* actual - desired.  desired = actual + r26 */
+
+    load_const r3, msg1
+    add r3, r3, r26
+    bl early_puts
 
     /* short circuit if we are already running form our desired location */
     cmpw r26, 0
-    beq _zimage_start_lib
+    beq atfinal
 
     mfspr r25, SPRN_L1CFG0
     andi. r25, r25, L1CFG0_CSIZE /* L1 cache line size */
@@ -76,7 +78,44 @@ usedest:
 
 atfinal:
 
+    load_const r3, msg2
+    bl early_puts
+
+    xor r3, r3, r3
+    xor r4, r4, r4
+    xor r5, r5, r5
+    xor r6, r6, r6
+    xor r7, r7, r7
+
 	b	_zimage_start_lib
+
+/* void early_puts(const char *) */
+early_puts:
+    /* UART base */
+    load_const r12, 0xe1004500
+    subi r3, r3, 1
+1:
+    /* loop until UART ready */
+    lbz r5, 5(r12)
+    eieio
+    andi. r5, r5, 0x40
+    beq 1b
+
+    /* write non-nil */
+    lbzu r4, 1(r3)
+    cmpwi r4, 0
+    beqlr /* nil */
+
+    stb r4, 0(r12)
+    eieio
+    b 1b
+
+
+msg1:
+.ascii "relocator starting\r\n\0"
+msg2:
+.ascii "relocated\r\n\0"
+.align 2
 
 /* codemove() (memmove() with L1 icache clear)
  *

@@ -25,12 +25,35 @@ BSS_STACK(4*1024);
 
 extern int platform_specific_init(void) __attribute__((weak));
 
+static
+void uart_tx(char c)
+{
+    unsigned char *base = (unsigned char*)0xe1004500;
+    while(!(in_8(base+5)&0x40)) {}
+    out_8(base, c);
+}
+
+static
+void early_write(const char *buf, int len)
+{
+    while(len--) {
+        char c = *buf++;
+        if(c=='\n')
+            uart_tx('\r');
+        uart_tx(c);
+    }
+}
+
 void platform_init(unsigned long r3, unsigned long r4, unsigned long r5,
 		   unsigned long r6, unsigned long r7)
 {
 	const u32 *na, *ns, *reg, *timebase;
 	u64 memsize64;
 	int node, size, i;
+
+    console_ops.write = early_write;
+
+    printf("Linux simpleboot\n");
 
 	/* Make sure FDT blob is sane */
 	if (fdt_check_header(_dtb_start) != 0)

@@ -360,4 +360,8 @@
                 reg = <0xe2000000 0x01000000>;
                 compatible = "artesyn,mvme3100-cpld";
         };
+
+	chosen {
+		linux,stdout-path = &serial0;
+	};
 };
