@@ -150,6 +150,7 @@
 			};
 		};
 
+		/* GMII */
 		enet0: ethernet@24000 {
 			#address-cells = <1>;
 			#size-cells = <1>;
@@ -162,7 +163,6 @@
 			local-mac-address = [ 00 00 00 00 00 00 ];
 			interrupts = <29 2 30 2 34 2>;
 			interrupt-parent = <&mpic>;
-			tbi-handle = <&tbi0>;
 			phy-handle = <&phy0>;
 
 			mdio@520 {
@@ -171,28 +171,25 @@
 				compatible = "fsl,gianfar-mdio";
 				reg = <0x520 0x20>;
 
-				phy0: ethernet-phy@0 {
-					interrupt-parent = <&mpic>;
-					interrupts = <10 1>;
-					reg = <0x0>;
-				};
-				phy1: ethernet-phy@1 {
+				phy0: ethernet-phy@1 {
 					interrupt-parent = <&mpic>;
 					interrupts = <10 1>;
 					reg = <0x1>;
+				};
+				phy1: ethernet-phy@2 {
+					interrupt-parent = <&mpic>;
+					interrupts = <10 1>;
+					reg = <0x2>;
 				};
 				phy3: ethernet-phy@3 {
 					interrupt-parent = <&mpic>;
 					interrupts = <10 1>;
 					reg = <0x3>;
 				};
-				tbi0: tbi-phy@11 {
-					reg = <0x11>;
-					device_type = "tbi-phy";
-				};
 			};
 		};
 
+		/* GMII */
 		enet1: ethernet@25000 {
 			#address-cells = <1>;
 			#size-cells = <1>;
@@ -205,22 +202,10 @@
 			local-mac-address = [ 00 00 00 00 00 00 ];
 			interrupts = <35 2 36 2 40 2>;
 			interrupt-parent = <&mpic>;
-			tbi-handle = <&tbi1>;
 			phy-handle = <&phy1>;
-
-			mdio@520 {
-				#address-cells = <1>;
-				#size-cells = <0>;
-				compatible = "fsl,gianfar-tbi";
-				reg = <0x520 0x20>;
-
-				tbi1: tbi-phy@11 {
-					reg = <0x11>;
-					device_type = "tbi-phy";
-				};
-			};
 		};
 
+		/* TODO: actually a 10/100 FEC interface */
 		enet2: ethernet@26000 {
 			#address-cells = <1>;
 			#size-cells = <1>;
@@ -233,20 +218,7 @@
 			local-mac-address = [ 00 00 00 00 00 00 ];
 			interrupts = <41 2>;
 			interrupt-parent = <&mpic>;
-			tbi-handle = <&tbi2>;
 			phy-handle = <&phy3>;
-
-			mdio@520 {
-				#address-cells = <1>;
-				#size-cells = <0>;
-				compatible = "fsl,gianfar-tbi";
-				reg = <0x520 0x20>;
-
-				tbi2: tbi-phy@11 {
-					reg = <0x11>;
-					device_type = "tbi-phy";
-				};
-			};
 		};
 
 		serial0: serial@4500 {
